@@ -1,6 +1,6 @@
 import sys
 from pathlib import Path
-
+from app import create_app, db
 import pytest
 
 # Ensure the repository root is on the import path when tests run in CI

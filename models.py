@@ -1,36 +1,16 @@
-"""Database models for the blog assignment.
+from flask_sqlalchemy import SQLAlchemy
 
-The attributes are left intentionally light so students can practice
-adding the proper columns, relationships, and helper methods.
-"""
-from app import db
-
+db = SQLAlchemy()
 
 class User(db.Model):
-    """Represents a user who can author posts."""
-
-    __tablename__ = "users"
-
-    # TODO: Add id primary key, username (unique + required), and
-    # a relationship to ``Post`` named ``posts``.
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String)  # Students should customize constraints
-
-    def __repr__(self):  # pragma: no cover - convenience repr
-        return f"<User {getattr(self, 'username', None)}>"
-
+    username = db.Column(db.String(50), unique=True, nullable=False)
+    email = db.Column(db.String(50), unique=True, nullable=False)
+    password = db.Column(db.String(50), nullable=False)
+    posts = db.relationship('Post', backref='author', lazy=True)
 
 class Post(db.Model):
-    """Represents a blog post written by a user."""
-
-    __tablename__ = "posts"
-
-    # TODO: Add id primary key, title, content, foreign key to users.id,
-    # and a relationship back to the ``User`` model.
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String)
-    content = db.Column(db.Text)
-    user_id = db.Column(db.Integer)
-
-    def __repr__(self):  # pragma: no cover - convenience repr
-        return f"<Post {getattr(self, 'title', None)}>"
+    title = db.Column(db.String(100), nullable=False)
+    body = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
